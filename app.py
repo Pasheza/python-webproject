@@ -2,9 +2,9 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import pandas as pd
 import plotly.graph_objs as go
 from helpers import helper
+from dash.dependencies import Input, Output
 
 df = helper.read_file('test.xlsx')
 
@@ -14,28 +14,33 @@ app.layout = html.Div(children=[
     html.H1(children='Test project, load from xlsx'),
 
     html.Div(children='''
-        Dash: A web application framework for Python.
+        A web application for displaying data from xlsx file.
     '''),
 
     dcc.Dropdown(
         id='dropdown',
-        options=helper.generate_dropdown_options(df),
-        placeholder='Select index'
+        options=helper.dropdown_options(df),
+        placeholder='Select index',
+        value=0
     ),
 
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'scatter', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'scatter', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    )
+    dcc.Graph(id='graph')
 ])
+
+
+@app.callback(Output('graph', 'figure'), [Input('dropdown', 'value')])
+def update_graph(selected_dropdown_value):
+    return go.Figure(
+            data=[
+                go.Scatter(
+                    x=helper.graph_argument(df),
+                    y=helper.graph_values(df, selected_dropdown_value),
+                    mode='lines+markers',
+                    name='Graph'
+                )
+            ]
+        )
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

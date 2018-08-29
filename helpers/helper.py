@@ -7,9 +7,19 @@ def read_file(path):
     return df
 
 
-def generate_dropdown_options(df):
+def dropdown_options(df):
     df = pd.DataFrame(df)
     options = []
-    for index in df.axes[0]:
-        options.append({'label': index, 'value': index})
+    for index, item in enumerate(df.axes[0]):
+        options.append({'label': item, 'value': index})
     return options
+
+
+def graph_argument(df):
+    df = pd.DataFrame(df)
+    return df.axes[1]
+
+
+def graph_values(origin, row_index):
+    df = pd.DataFrame(origin)
+    return df.values[row_index]
