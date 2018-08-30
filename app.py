@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
-from helpers import helper
 from dash.dependencies import Input, Output
+import helper
+import dbsetup
 
-df = helper.read_file('test.xlsx')
+df = helper.read_excel_sheet('test.xlsx', 'Outputs')
 
 app = dash.Dash()
 
@@ -19,9 +19,9 @@ app.layout = html.Div(children=[
 
     dcc.Dropdown(
         id='dropdown',
-        options=helper.dropdown_options(df),
+        options=dbsetup.dropdown_options(),
         placeholder='Select index',
-        value=0
+        value=dbsetup.first_dropdown_value()
     ),
 
     dcc.Graph(id='graph')
@@ -33,8 +33,8 @@ def update_graph(selected_dropdown_value):
     return go.Figure(
             data=[
                 go.Scatter(
-                    x=helper.graph_argument(df),
-                    y=helper.graph_values(df, selected_dropdown_value),
+                    x=dbsetup.graph_arguments(),
+                    y=dbsetup.graph_values(selected_dropdown_value),
                     mode='lines+markers',
                     name='Graph'
                 )
