@@ -1,6 +1,6 @@
 # python-webproject
 
-######Test python application which can load data from excel file to postgresql DB and visualize information from DB via web interface 
+ Test python application which can load data from excel file to postgresql DB and visualize information from DB via web interface 
 #### Instruction for launching this application
 
 ##### 1. Necessary requirements:
