@@ -13,14 +13,14 @@ con, meta = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password')
                                     db_data.get('port'), db_data.get('db'))
 
 app = dash.Dash()
-
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 app.layout = html.Div(children=[
-    html.H1(children='Test project, load from xlsx'),
+    html.H1(children='Test project'),
 
-    html.Div(children='''
-        A web application for displaying data from xlsx file.
+    html.H3(children='''
+        A web application for displaying data from DB table Outputs.
     '''),
-
+    html.Label('Choose index to display'),
     dcc.Dropdown(
         id='dropdown',
         options=sqlhelper.dropdown_options(con, meta),
@@ -42,7 +42,12 @@ def update_graph(selected_dropdown_value):
                     mode='lines+markers',
                     name='Graph'
                 )
-            ]
+            ],
+            layout={
+                'title': 'Values of chosen index - {}'.format(selected_dropdown_value),
+                'xaxis': {'title': 'Year'},
+                'yaxis': {'title': 'Value'}
+            }
         )
 
 
