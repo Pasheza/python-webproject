@@ -14,6 +14,9 @@
 ##### 3. Load data to DB from excel file
 - Edit parameters in **dbdata.yml** file to configure connection to your DB (user, password, host, port, DB name)
 - Run **dbtablesetup.py** script to make necessary tables in DB
+```shell
+python dbtablessetup.py
+```
 - Copy excel file with to the folder of your choice
 - Run **dbsetup.py** script with path to excel file as a parameter (example below for file in project root folder)
 ```shell
