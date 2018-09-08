@@ -1,4 +1,5 @@
 from sqlalchemy import *
+from model import Output
 
 
 def connect_to_db(user, password, host, port, db):
@@ -9,34 +10,26 @@ def connect_to_db(user, password, host, port, db):
     return con, meta
 
 
-def dropdown_options(con, meta):
-    outputs = Table('outputs', meta)
-    s = select([outputs.c.index])
-    result = con.execute(s)
+def dropdown_options(session):
     options = []
-    for row in result:
+    for row in session.query(Output.index).order_by(Output.index).distinct():
         options.append({'label': row[0], 'value': row[0]})
     return options
 
 
-def graph_arguments(meta):
-    outputs = Table('outputs', meta)
-    args = outputs.columns.keys()
-    args.remove('index')
+def graph_arguments(session):
+    args = []
+    for row in session.query(Output.year).order_by(Output.year).distinct():
+        args.append(row[0])
     return args
 
 
-def graph_values(con, meta, row_index):
-    outputs = Table('outputs', meta)
-    s = select([outputs]).where(outputs.c.index == row_index)
-    result = con.execute(s).fetchone()
-    values = list(result)
-    values.remove(row_index)
+def graph_values(session, row_index):
+    values = []
+    for row in session.query(Output.value).filter(Output.index == row_index).order_by(Output.year):
+        values.append(row[0])
     return values
 
 
-def first_dropdown_value(con, meta):
-    outputs = Table('outputs', meta)
-    s = select([outputs.c.index])
-    result = con.execute(s).fetchone()
-    return result[0]
+def first_dropdown_value(session):
+    return session.query(Output.index).order_by(Output.index).distinct().first()[0]

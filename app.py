@@ -5,12 +5,16 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 import sqlhelper
 import yaml
+from sqlalchemy.orm import sessionmaker
+
 
 with open("dbdata.yaml", 'r') as stream:
     db_data = yaml.load(stream)
 
 con, meta = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password'), db_data.get('host'),
                                     db_data.get('port'), db_data.get('db'))
+Session = sessionmaker(bind=con)
+session = Session()
 
 app = dash.Dash()
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
@@ -23,9 +27,9 @@ app.layout = html.Div(children=[
     html.Label('Choose index to display'),
     dcc.Dropdown(
         id='dropdown',
-        options=sqlhelper.dropdown_options(con, meta),
+        options=sqlhelper.dropdown_options(session),
         placeholder='Select index',
-        value=sqlhelper.first_dropdown_value(con, meta)
+        value=sqlhelper.first_dropdown_value(session)
     ),
 
     dcc.Graph(id='graph')
@@ -37,8 +41,8 @@ def update_graph(selected_dropdown_value):
     return go.Figure(
             data=[
                 go.Scatter(
-                    x=sqlhelper.graph_arguments(meta),
-                    y=sqlhelper.graph_values(con, meta, selected_dropdown_value),
+                    x=sqlhelper.graph_arguments(session),
+                    y=sqlhelper.graph_values(session, selected_dropdown_value),
                     mode='lines+markers',
                     name='Graph'
                 )
