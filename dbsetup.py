@@ -14,17 +14,10 @@ except IndexError:
     print('You need to enter path to excel file as parameter')
 with open("dbdata.yaml", 'r') as stream:
     db_data = yaml.load(stream)
-con, meta = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password'), db_data.get('host'),
+con = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password'), db_data.get('host'),
                                     db_data.get('port'), db_data.get('db'))
 df_inputs = helper.read_excel_sheet(excel_path, 'Inputs')
 df_outputs = helper.read_excel_sheet(excel_path, 'Outputs')
-
-
-if Input.__table__.exists(bind=con):
-    Input.__table__.drop(con)
-if Output.__table__.exists(bind=con):
-    Output.__table__.drop(con)
-get_base().metadata.create_all(con)
 
 inputs = []
 for index, row in df_inputs.iterrows():

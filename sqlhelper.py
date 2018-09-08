@@ -6,8 +6,7 @@ def connect_to_db(user, password, host, port, db):
     url = 'postgresql://{}:{}@{}:{}/{}'
     url = url.format(user, password, host, port, db)
     con = create_engine(url, client_encoding='utf8')
-    meta = MetaData(bind=con, reflect=True)
-    return con, meta
+    return con
 
 
 def dropdown_options(session):

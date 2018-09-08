@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 with open("dbdata.yaml", 'r') as stream:
     db_data = yaml.load(stream)
 
-con, meta = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password'), db_data.get('host'),
+con = sqlhelper.connect_to_db(db_data.get('user'), db_data.get('password'), db_data.get('host'),
                                     db_data.get('port'), db_data.get('db'))
 Session = sessionmaker(bind=con)
 session = Session()
