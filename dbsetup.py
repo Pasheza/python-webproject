@@ -33,6 +33,13 @@ for index, row in df_outputs.iterrows():
 
 Session = sessionmaker(bind=con)
 session = Session()
-session.add_all(inputs + outputs)
-session.commit()
-session.close()
+try:
+    session.query(Input).delete()
+    session.query(Output).delete()
+    session.commit()
+    session.add_all(inputs + outputs)
+    session.commit()
+except:
+    session.rollback()
+finally:
+    session.close()
